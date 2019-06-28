@@ -288,6 +288,7 @@ module MoSQL
     end
 
     def copy_data(db, ns, objs)
+      start = Time.now
       schema = find_ns!(ns)
       db.synchronize do |pg|
         sql = "COPY \"#{schema[:meta][:table]}\" " +
@@ -303,6 +304,8 @@ module MoSQL
           db.send(:raise_error, e)
         end
       end
+      elapsed = Time.now - start
+      log.info("copy_data elapsed time: #{elapsed}...")
     end
 
     def quote_copy(val)
